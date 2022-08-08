@@ -1,28 +1,78 @@
 import pygame as pg
 import pygame.joystick as gamepad
-from pygame.locals import *
 
 running = True
 
-WHITE = (255,255,255)
+W_SPEED = 1
+R_SPEED = 3
 
-rooms = {
-    '01': {
-        'name': 'Main Hall',
-        'door_n': '',
-        'door_s': '',
-        'door_e': '',
-        'door_w': '',
-        'start': (372,519),
-    }
-}
+WHITE = (255, 255, 255)
 
-def load_room(room):
-    return rooms['01']
+u_boundaries = (((0, 274), (36, 274), 'WALL'),
+                ((37, 274), (143, 274), 'DOOR'),
+                ((144, 274), (233, 274), 'WALL'),
+                ((233, 313), (267, 313), 'WALL'),
+                ((268, 313), (519, 313), 'STAIRS'),
+                ((519, 313), (549, 313), 'STAIRS'),
+                ((549, 274), (616, 274), 'WALL'),
+                ((617, 274), (718, 274), 'DOOR'),
+                ((719, 274), (768, 274), 'WALL'))
+d_boundaries = ((), ())
+l_boundaries = (((550, 274), (550, 312), 'WALL'), ())
+r_boundaries = (((234, 274), (235, 312), 'WALL'), ())
 
+
+# (((235, 274), (235, 313), 'WALL'), ((0, 0), (0, 0), 'NULL'))
+
+def get_room_bounds(x, y, direction):
+    if direction == 'UP':
+        for i in range(0, len(u_boundaries)):
+            if u_boundaries[i]:
+                for j in range(0, 64):
+                    if player_state is "WALK":
+                        if x + j + W_SPEED in range(u_boundaries[i][0][0], u_boundaries[i][1][0]):
+                            if u_boundaries[i][0][1] <= y <= u_boundaries[i][1][1]:
+                                return True, u_boundaries[i][2]
+                    if player_state is "RUN":
+                        if x + j + R_SPEED in range(u_boundaries[i][0][0], u_boundaries[i][1][0]):
+                            if u_boundaries[i][0][1] <= y <= u_boundaries[i][1][1]:
+                                return True, u_boundaries[i][2]
+        return False, 'None'
+    if direction == 'RIGHT':
+        for i in range(0, len(r_boundaries)):
+            if r_boundaries[i]:
+                if player_state is "WALK":
+                    if x + 64 == r_boundaries[i][0][0]:
+                        if r_boundaries[i][0][1] <= y <= r_boundaries[i][1][1]:
+                            return True, r_boundaries[i][2]
+                if player_state is "RUN":
+                    if x + 64 + R_SPEED == r_boundaries[i][0][0]:
+                        if r_boundaries[i][0][1] <= y <= r_boundaries[i][1][1]:
+                            return True, r_boundaries[i][2]
+        return False, 'None'
+    if direction == 'LEFT':
+        for i in range(0, len(l_boundaries)):
+            if l_boundaries[i]:
+                if player_state is "WALK":
+                    if x == l_boundaries[i][0][0]:
+                        if l_boundaries[i][0][1] <= y <= l_boundaries[i][1][1]:
+                            return True, l_boundaries[i][2]
+                if player_state is "RUN":
+                    if x - R_SPEED == l_boundaries[i][0][0]:
+                        if l_boundaries[i][0][1] <= y <= l_boundaries[i][1][1]:
+                            return True, l_boundaries[i][2]
+        return False, 'None'
+    if direction == 'DOWN':
+        for i in range(0, len(d_boundaries)):
+            if d_boundaries[i]:
+                if player_state is "WALK":
+                    print("WALK")
+                if player_state is "RUN":
+                    print("RUN")
+        return False, 'None'
 
 def init():
-    background_colour = (0,0,0)
+    background_colour = (0, 0, 0)
     (width, height) = (768, 720)
     screen = pg.display.set_mode((width, height))
     pg.display.set_caption('Resident Evil - Proto')
@@ -30,21 +80,12 @@ def init():
     pg.display.flip()
     return screen
 
+
 def title(screen):
-
     option_selected = 0
-
-    #logo_img_1 = pg.image.load('res/RE Logo.png')
     pg.font.init()
     logo_font = pg.font.SysFont('dincondensed', 100)
     logo = logo_font.render("RESIDENT EVIL", False, (255, 0, 0))
-
-
-
-
-    print(pg.font.get_fonts())
-
-
 
     title_screen = True
     while title_screen:
@@ -52,78 +93,68 @@ def title(screen):
         menu_font = pg.font.SysFont('helvetica', 30)
 
         if option_selected == 0:
-            menu_start = menu_font.render("- Start", False, (255, 255, 255))
-            menu_network = menu_font.render("  RE:Net game", False, (255, 255, 255))
-            menu_continue = menu_font.render("  Continue", False, (255, 255, 255))
-            menu_options = menu_font.render("  Options", False, (255, 255, 255))
+            menu_start = menu_font.render("Start", False, (220, 220, 220))
+            menu_network = menu_font.render("RE:Net game", False, (255, 255, 255))
+            menu_continue = menu_font.render("Continue", False, (255, 255, 255))
+            menu_options = menu_font.render("Options", False, (255, 255, 255))
         if option_selected == 1:
-            menu_start = menu_font.render("  Start", False, (255, 255, 255))
-            menu_network = menu_font.render("- RE:Net game", False, (255, 255, 255))
-            menu_continue = menu_font.render("  Continue", False, (255, 255, 255))
-            menu_options = menu_font.render("  Options", False, (255, 255, 255))
+            menu_start = menu_font.render("Start", False, (255, 255, 255))
+            menu_network = menu_font.render("RE:Net game", False, (220, 220, 220))
+            menu_continue = menu_font.render("Continue", False, (255, 255, 255))
+            menu_options = menu_font.render("Options", False, (255, 255, 255))
         if option_selected == 2:
-            menu_start = menu_font.render("  Start", False, (255, 255, 255))
-            menu_network = menu_font.render("  RE:Net game", False, (255, 255, 255))
-            menu_continue = menu_font.render("- Continue", False, (255, 255, 255))
-            menu_options = menu_font.render("  Options", False, (255, 255, 255))
+            menu_start = menu_font.render("Start", False, (255, 255, 255))
+            menu_network = menu_font.render("RE:Net game", False, (255, 255, 255))
+            menu_continue = menu_font.render("Continue", False, (220, 220, 220))
+            menu_options = menu_font.render("Options", False, (255, 255, 255))
         if option_selected == 3:
-            menu_start = menu_font.render("  Start", False, (255, 255, 255))
-            menu_network = menu_font.render("  RE:Net game", False, (255, 255, 255))
-            menu_continue = menu_font.render("  Continue", False, (255, 255, 255))
-            menu_options = menu_font.render("- Options", False, (255, 255, 255))
-
-
-
-        screen.blit(logo, (160, 130))
-        screen.blit(menu_start, (260, 300))
-        screen.blit(menu_network, (260, 330))
-        screen.blit(menu_continue, (260, 360))
-        screen.blit(menu_options, (260, 4200))
-        #screen.blit()
-
-        pg.display.flip()
-        pg.display.update()
+            menu_start = menu_font.render("Start", False, (255, 255, 255))
+            menu_network = menu_font.render("RE:Net game", False, (255, 255, 255))
+            menu_continue = menu_font.render("Continue", False, (255, 255, 255))
+            menu_options = menu_font.render("Options", False, (220, 220, 220))
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 game = False
+            if event.type == pg.KEYDOWN:
+                if event.key == pg.K_DOWN:
+                    if option_selected <= 3:
+                        option_selected += 1
+                    if option_selected == 4:
+                        option_selected = 0
+                if event.key == pg.K_UP:
+                    if option_selected >= 0:
+                        option_selected -= 1
+                    if option_selected < 0:
+                        option_selected = 3
+                if event.key == pg.K_RETURN:
+                    if option_selected == 0:
+                        return "GAME"
 
-        keys = pg.key.get_pressed()
-        if keys[pg.K_LEFT]:
-            print("left")
-            title_screen = False
-        if keys[pg.K_RIGHT]:
-            print("right")
-        if keys[pg.K_UP]:
-            print("up")
-        if keys[pg.K_DOWN]:
-            if option_selected < 3:
-                option_selected += 1
-            if option_selected == 3:
-                option_selected = 0
+        screen.fill((0, 0, 0))
+        screen.blit(logo, (160, 130))
+        screen.blit(menu_start, (300, 300))
+        screen.blit(menu_network, (300, 330))
+        screen.blit(menu_continue, (300, 360))
+        screen.blit(menu_options, (300, 390))
 
+        pg.display.flip()
+        pg.display.update()
 
-    return "Test"
+    return "None"
 
 
 def game(screen, opts):
     player_sprite = pg.image.load('res/green.png')
-    attack_sprite = pg.image.load('res/red.png')
-    #joysticks = [pg.joystick.Joystick(x) for x in range(pg.joystick.get_count())]
-    #player1_control = pygame.joystick.Joystick(0)
-    #player1_control.init()
-
-    #print(joysticks)
-    #print(player1_control)
+    action_sprite = pg.image.load('res/red.png')
     game = True
 
-    player_loc_x = 0
-    player_loc_y = 0
+    global player_state
+
+    player_loc_x = 360
+    player_loc_y = 460
 
     bg = pg.image.load("res/mh_01.png")
-
-    #Debug Location
-
     font = pg.font.Font('freesansbold.ttf', 32)
 
     while game:
@@ -132,46 +163,71 @@ def game(screen, opts):
             if event.type == pg.QUIT:
                 game = False
         keys = pg.key.get_pressed()
+        if keys[pg.K_a]:
+            player_state = "RUN"
+        if not keys[pg.K_a]:
+            player_state = "WALK"
+
+
         if keys[pg.K_LEFT]:
-            print("left")
             if player_loc_x > 0:
-                player_loc_x = player_loc_x - 3
+                boundary, object_type = get_room_bounds(player_loc_x, player_loc_y, 'LEFT')
+                if not boundary:
+                    if player_state is "WALK":
+                        player_loc_x = player_loc_x - W_SPEED
+                    if player_state is "RUN":
+                        player_loc_x = player_loc_x - R_SPEED
         if keys[pg.K_RIGHT]:
-            if player_loc_x <= 768 - 16:
-                player_loc_x = player_loc_x + 3
+            if player_loc_x <= 768 - 64:
+                boundary, object_type = get_room_bounds(player_loc_x, player_loc_y, 'RIGHT')
+                if not boundary:
+                    if player_state is "WALK":
+                        player_loc_x = player_loc_x + W_SPEED
+                    if player_state is "RUN":
+                        player_loc_x = player_loc_x + R_SPEED
         if keys[pg.K_UP]:
-            print("up")
             if player_loc_y > 0:
-                player_loc_y = player_loc_y - 3
+                boundary, object_type = get_room_bounds(player_loc_x, player_loc_y, 'UP')
+                if not boundary:
+                    if player_state is "WALK":
+                        player_loc_y = player_loc_y - W_SPEED
+                    if player_state is "RUN":
+                        player_loc_y = player_loc_y - R_SPEED
         if keys[pg.K_DOWN]:
-            print("down")
-            if player_loc_y <= 720 - 16:
-                player_loc_y = player_loc_y + 3
+            if player_loc_y <= 720 - 128:
+                boundary, object_type = get_room_bounds(player_loc_x, player_loc_y, 'DOWN')
+                if not boundary:
+                    if player_state is "WALK":
+                        player_loc_y = player_loc_y + W_SPEED
+                    if player_state is "RUN":
+                        player_loc_y = player_loc_y + R_SPEED
 
         screen.fill((0, 0, 0))
         player_loc = font.render('X: ' + str(player_loc_x) + ' Y: ' + str(player_loc_y), True, WHITE)
         textRect = player_loc.get_rect()
         textRect.topright = (768, 0)
-
-
-        screen.blit(bg, (0,0))
-        screen.blit(player_sprite,(player_loc_x, player_loc_y))
+        screen.blit(bg, (0, 0))
+        screen.blit(player_sprite, (player_loc_x, player_loc_y))
         screen.blit(player_loc, textRect)
-
-
         pg.display.flip()
         pg.display.update()
 
+
 def main():
+    running = True
+    selection = ''
     screen = init()
-    opts = title(screen)
-    game(screen, opts)
+    while running:
+        if selection == 'GAME':
+            game(screen, "Test")
+        elif selection == 'OPTIONS':
+            print("Nothing yet")
+            selection = ''
+        else:
+            selection = title(screen)
 
 
 if __name__ == '__main__':
     pg.init()
-    gamepad.init()
-    print(gamepad.get_init())
-    print(gamepad.get_count())
     joysticks = [gamepad.Joystick(x) for x in range(gamepad.get_count())]
     main()
