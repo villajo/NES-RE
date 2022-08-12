@@ -1,5 +1,6 @@
 import pygame as pg
 import pygame.joystick as gamepad
+import data as data
 
 running = True
 
@@ -8,21 +9,11 @@ R_SPEED = 3
 
 WHITE = (255, 255, 255)
 
-u_boundaries = (((0, 274), (36, 274), 'WALL'),
-                ((37, 274), (143, 274), 'DOOR'),
-                ((144, 274), (233, 274), 'WALL'),
-                ((233, 313), (267, 313), 'WALL'),
-                ((268, 313), (519, 313), 'STAIRS'),
-                ((519, 313), (549, 313), 'STAIRS'),
-                ((549, 274), (616, 274), 'WALL'),
-                ((617, 274), (718, 274), 'DOOR'),
-                ((719, 274), (768, 274), 'WALL'))
-d_boundaries = ((), ())
-l_boundaries = (((550, 274), (550, 312), 'WALL'), ())
-r_boundaries = (((234, 274), (235, 312), 'WALL'), ())
+u_boundaries = ()
+d_boundaries = ()
+l_boundaries = ()
+r_boundaries = ()
 
-
-# (((235, 274), (235, 313), 'WALL'), ((0, 0), (0, 0), 'NULL'))
 
 def get_room_bounds(x, y, direction):
     if direction == 'UP':
@@ -145,6 +136,8 @@ def title(screen):
 
 
 def game(screen, opts):
+    global u_boundaries, d_boundaries, l_boundaries, r_boundaries
+    u_boundaries, d_boundaries, l_boundaries, r_boundaries, room_img = data.load_area_data("01", "mansion")
     player_sprite = pg.image.load('res/green.png')
     action_sprite = pg.image.load('res/red.png')
     game = True
@@ -154,11 +147,10 @@ def game(screen, opts):
     player_loc_x = 360
     player_loc_y = 460
 
-    bg = pg.image.load("res/mh_01.png")
+    bg = pg.image.load("res/" + room_img + ".png")
     font = pg.font.Font('freesansbold.ttf', 32)
 
     while game:
-
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 game = False
