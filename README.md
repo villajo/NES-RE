@@ -8,3 +8,8 @@ of Resident Evil on the NES, I'd like this to be more like the Gameboy Color ver
 
 Entire project is coded in Python3 because I refuse to use 2.x. I use Pygame for the rendering of graphics. All of the sprites are/were made by me as well 
 as any of the artwork. 
+
+
+Current State: 
+
+Not much is implemented at the moment. This was started two weekends ago and has been in my spare time. I'm figuring out how to set boundaries at the moment and switch between scenes. I am loading json data from a file; this data includes X,Y boundary data on a hard axis (No diagonals yet), background picture data, the beginning of object data, and area name.  
