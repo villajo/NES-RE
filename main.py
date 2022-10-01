@@ -20,11 +20,11 @@ def get_room_bounds(x, y, direction):
         for i in range(0, len(u_boundaries)):
             if u_boundaries[i]:
                 for j in range(0, 64):
-                    if player_state is "WALK":
+                    if player_state == "WALK":
                         if x + j + W_SPEED in range(u_boundaries[i][0][0], u_boundaries[i][1][0]):
                             if u_boundaries[i][0][1] <= y <= u_boundaries[i][1][1]:
                                 return True, u_boundaries[i][2]
-                    if player_state is "RUN":
+                    if player_state == "RUN":
                         if x + j + R_SPEED in range(u_boundaries[i][0][0], u_boundaries[i][1][0]):
                             if u_boundaries[i][0][1] <= y <= u_boundaries[i][1][1]:
                                 return True, u_boundaries[i][2]
@@ -32,11 +32,11 @@ def get_room_bounds(x, y, direction):
     if direction == 'RIGHT':
         for i in range(0, len(r_boundaries)):
             if r_boundaries[i]:
-                if player_state is "WALK":
+                if player_state == "WALK":
                     if x + 64 == r_boundaries[i][0][0]:
                         if r_boundaries[i][0][1] <= y <= r_boundaries[i][1][1]:
                             return True, r_boundaries[i][2]
-                if player_state is "RUN":
+                if player_state == "RUN":
                     if x + 64 + R_SPEED == r_boundaries[i][0][0]:
                         if r_boundaries[i][0][1] <= y <= r_boundaries[i][1][1]:
                             return True, r_boundaries[i][2]
@@ -44,11 +44,11 @@ def get_room_bounds(x, y, direction):
     if direction == 'LEFT':
         for i in range(0, len(l_boundaries)):
             if l_boundaries[i]:
-                if player_state is "WALK":
+                if player_state == "WALK":
                     if x == l_boundaries[i][0][0]:
                         if l_boundaries[i][0][1] <= y <= l_boundaries[i][1][1]:
                             return True, l_boundaries[i][2]
-                if player_state is "RUN":
+                if player_state == "RUN":
                     if x - R_SPEED == l_boundaries[i][0][0]:
                         if l_boundaries[i][0][1] <= y <= l_boundaries[i][1][1]:
                             return True, l_boundaries[i][2]
@@ -56,9 +56,9 @@ def get_room_bounds(x, y, direction):
     if direction == 'DOWN':
         for i in range(0, len(d_boundaries)):
             if d_boundaries[i]:
-                if player_state is "WALK":
+                if player_state == "WALK":
                     print("WALK")
-                if player_state is "RUN":
+                if player_state == "RUN":
                     print("RUN")
         return False, 'None'
 
