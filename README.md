@@ -8,4 +8,8 @@ Entire project is coded in Python3. The data format for areas, weapons, etc is J
 
 Current Status: 
 
-Not much is implemented at the moment. This was started two weekends ago and has been in my spare time. I'm figuring out how to set boundaries at the moment and switch between scenes. I am loading json data from a file; this data includes X,Y boundary data on a hard axis (No diagonals yet), background picture data, the beginning of object data, and area name.  
+Not much is implemented at the moment. 
+
+I'm figuring out how to set boundaries at the moment and switch between scenes. I am loading json data from a file; this data includes X,Y boundary data on a hard axis (No diagonals yet), background picture data, the beginning of object data, and area name. I plan for the background picture to change to something closer to the original Resident Evil, but seriously demade. lol
+
+This project is on pause until I find a new position. Though I'm employed, I'm spending every waking moment studying all I've learned over the last few years to be able to find a remote job that's more friendly to me seeing my family. 
